@@ -31,12 +31,6 @@ export default function HomeScreen() {
           backgroundTime.current = Date.now();
           setDistractions(prev => prev + 1);
           setIsActive(false); // Sayacı duraklat
-          
-          Alert.alert(
-            '⚠️ Dikkat Dağınıklığı',
-            'Uygulamadan ayrıldınız. Sayaç duraklatıldı.',
-            [{ text: 'Tamam' }]
-          );
         }
       }
       appState.current = nextAppState;
@@ -114,7 +108,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: '#1a3a2e' }]}>
       <StatusBar style="light" />
       
       <View style={styles.header}>
@@ -182,13 +176,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#3498db',
+    backgroundColor: '#000000',
     paddingTop: 60,
-    paddingBottom: 30,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
+    paddingBottom: 100,
   },
   title: {
     fontSize: 28,

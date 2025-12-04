@@ -16,13 +16,20 @@ export default function App() {
           tabBarActiveTintColor: '#3498db',
           tabBarInactiveTintColor: '#95a5a6',
           tabBarStyle: {
-            height: 60,
-            paddingBottom: 8,
-            paddingTop: 8,
+            height: 70,
+            paddingBottom: 15,
+            paddingTop: 10,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            elevation: 10,
+            zIndex: 999,
           },
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: '600',
+            marginBottom: 5,
           },
         }}
       >
