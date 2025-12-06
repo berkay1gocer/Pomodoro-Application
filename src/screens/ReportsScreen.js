@@ -78,9 +78,9 @@ export default function ReportsScreen() {
       }
     >
       <View style={styles.header}>
-        <Text style={styles.title}>📊 Raporlarım</Text>
+        <Text style={styles.title}>📊 İstatistiklerim</Text>
         <TouchableOpacity style={styles.clearButton} onPress={handleClearData}>
-          <Text style={styles.clearButtonText}>🗑️</Text>
+          <Text style={styles.clearButtonText}>🗑️ Temizle</Text>
         </TouchableOpacity>
       </View>
 
