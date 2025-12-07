@@ -88,22 +88,22 @@ export default function ReportsScreen() {
       <View style={styles.statsGrid}>
         <View style={[styles.statCard, { backgroundColor: '#3498db' }]}>
           <Text style={styles.statValue}>{stats.todayTotal} dk</Text>
-          <Text style={styles.statLabel}>Bugün Toplam</Text>
+          <Text style={styles.statLabel}>Bugün</Text>
         </View>
         
         <View style={[styles.statCard, { backgroundColor: '#2ecc71' }]}>
           <Text style={styles.statValue}>{stats.allTimeTotal} dk</Text>
-          <Text style={styles.statLabel}>Tüm Zamanlar</Text>
+          <Text style={styles.statLabel}>Toplam Süre</Text>
         </View>
         
         <View style={[styles.statCard, { backgroundColor: '#e74c3c' }]}>
           <Text style={styles.statValue}>{stats.totalDistractions}</Text>
-          <Text style={styles.statLabel}>Toplam Dikkat Dağınıklığı</Text>
+          <Text style={styles.statLabel}>Dikkat Dağınıklığı</Text>
         </View>
         
         <View style={[styles.statCard, { backgroundColor: '#9b59b6' }]}>
           <Text style={styles.statValue}>{sessions.length}</Text>
-          <Text style={styles.statLabel}>Toplam Seans</Text>
+          <Text style={styles.statLabel}>Seans Sayısı</Text>
         </View>
       </View>
 
