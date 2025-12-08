@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions, RefreshControl, TouchableOpacity, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
 import { getSessions, clearAllSessions } from '../utils/storage';
 import { calculateStats } from '../utils/statsCalculator';
@@ -9,6 +9,7 @@ import { getCategoryColor, getCategoryLabel } from '../utils/categories';
 const screenWidth = Dimensions.get('window').width;
 
 export default function ReportsScreen() {
+  const navigation = useNavigation();
   const [sessions, setSessions] = useState([]);
   const [stats, setStats] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -20,11 +21,20 @@ export default function ReportsScreen() {
     setStats(calculatedStats);
   };
 
+  // Sayfa odaklandığında yükle
   useFocusEffect(
     useCallback(() => {
       loadData();
     }, [])
   );
+
+  // Navigation event listener - Ana sayfadan seans kaydedildiğinde güncelle
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadData();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -53,6 +63,41 @@ export default function ReportsScreen() {
     );
   };
 
+  const addTestData = async () => {
+    const { saveSession } = require('../utils/storage');
+    const testSessions = [];
+    
+    // Son 7 gün için test verileri
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      
+      // Her gün 2-3 seans ekle
+      const sessionsPerDay = Math.floor(Math.random() * 2) + 2;
+      for (let j = 0; j < sessionsPerDay; j++) {
+        const categories = ['ders', 'kodlama', 'proje', 'kitap', 'yazi', 'diger'];
+        const category = categories[Math.floor(Math.random() * categories.length)];
+        
+        testSessions.push({
+          category: category,
+          categoryLabel: category.charAt(0).toUpperCase() + category.slice(1),
+          duration: Math.floor(Math.random() * 1200) + 600, // 10-30 dakika
+          distractions: Math.floor(Math.random() * 3),
+          date: date.toISOString(),
+          completedAt: date.toISOString(),
+        });
+      }
+    }
+    
+    // Verileri kaydet
+    for (const session of testSessions) {
+      await saveSession(session);
+    }
+    
+    Alert.alert('✅ Başarılı', `${testSessions.length} test verisi eklendi!`);
+    loadData();
+  };
+
   if (!stats) {
     return (
       <View style={styles.loadingContainer}>
@@ -79,9 +124,14 @@ export default function ReportsScreen() {
     >
       <View style={styles.header}>
         <Text style={styles.title}>📊 İstatistiklerim</Text>
-        <TouchableOpacity style={styles.clearButton} onPress={handleClearData}>
-          <Text style={styles.clearButtonText}>🗑️ Temizle</Text>
-        </TouchableOpacity>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={styles.testButton} onPress={addTestData}>
+            <Text style={styles.testButtonText}>📝 Test</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.clearButton} onPress={handleClearData}>
+            <Text style={styles.clearButtonText}>🗑️</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Genel İstatistikler */}
@@ -208,6 +258,20 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#2c3e50',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  testButton: {
+    padding: 10,
+    backgroundColor: '#3498db',
+    borderRadius: 8,
+  },
+  testButtonText: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: 'bold',
   },
   clearButton: {
     padding: 10,

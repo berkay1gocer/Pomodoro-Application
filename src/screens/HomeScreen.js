@@ -9,7 +9,7 @@ import { getCategoryLabel } from '../utils/categories';
 
 const FOCUS_TIME = 25 * 60; // 25 dakika
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [seconds, setSeconds] = useState(FOCUS_TIME);
   const [isActive, setIsActive] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('ders');
@@ -96,6 +96,8 @@ export default function HomeScreen() {
         Alert.alert('✅ Başarılı', 'Seans kaydedildi!');
         setShowSummary(false);
         resetTimer();
+        // Raporlar sayfasını güncelle
+        navigation.setParams({ refresh: Date.now() });
       } else {
         Alert.alert('❌ Hata', 'Seans kaydedilemedi.');
       }
