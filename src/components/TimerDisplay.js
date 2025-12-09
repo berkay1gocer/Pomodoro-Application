@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-export default function TimerDisplay({ seconds, mode }) {
+export default function TimerDisplay({ seconds, totalSeconds, mode }) {
   const formatTime = () => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -10,7 +10,7 @@ export default function TimerDisplay({ seconds, mode }) {
   };
 
   const getProgress = () => {
-    const totalTime = mode === 'focus' ? 25 * 60 : 5 * 60;
+    const totalTime = totalSeconds || (mode === 'focus' ? 25 * 60 : 5 * 60);
     return ((totalTime - seconds) / totalTime);
   };
 

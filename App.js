@@ -20,11 +20,12 @@ export default function App() {
             paddingBottom: 15,
             paddingTop: 10,
             position: 'absolute',
-            bottom: 0,
+            bottom: 30,
             left: 0,
             right: 0,
             elevation: 10,
             zIndex: 999,
+            backgroundColor: '#fff',
           },
           tabBarLabelStyle: {
             fontSize: 13,

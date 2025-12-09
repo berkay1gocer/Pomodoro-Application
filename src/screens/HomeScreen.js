@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, AppState, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, AppState, Alert, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import CategorySelector from '../components/CategorySelector';
 import TimerDisplay from '../components/TimerDisplay';
@@ -7,10 +7,11 @@ import SessionSummary from '../components/SessionSummary';
 import { saveSession } from '../utils/storage';
 import { getCategoryLabel } from '../utils/categories';
 
-const FOCUS_TIME = 25 * 60; // 25 dakika
+const DEFAULT_FOCUS_TIME = 25; // 25 dakika
 
 export default function HomeScreen({ navigation }) {
-  const [seconds, setSeconds] = useState(FOCUS_TIME);
+  const [focusMinutes, setFocusMinutes] = useState(DEFAULT_FOCUS_TIME);
+  const [seconds, setSeconds] = useState(DEFAULT_FOCUS_TIME * 60);
   const [isActive, setIsActive] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('ders');
   const [distractions, setDistractions] = useState(0);
@@ -58,7 +59,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleTimerComplete = () => {
     setIsActive(false);
-    const duration = FOCUS_TIME;
+    const duration = focusMinutes * 60;
     
     const session = {
       category: selectedCategory,
@@ -74,7 +75,7 @@ export default function HomeScreen({ navigation }) {
   };
 
   const toggleTimer = () => {
-    if (!isActive && seconds === FOCUS_TIME) {
+    if (!isActive && seconds === focusMinutes * 60) {
       // Yeni seans başlatılıyor
       setSessionStartTime(new Date().toISOString());
       setDistractions(0);
@@ -84,9 +85,17 @@ export default function HomeScreen({ navigation }) {
 
   const resetTimer = () => {
     setIsActive(false);
-    setSeconds(FOCUS_TIME);
+    setSeconds(focusMinutes * 60);
     setDistractions(0);
     setSessionStartTime(null);
+  };
+
+  const adjustTime = (increment) => {
+    if (isActive) return; // Timer aktifken değişiklik yapılamaz
+    
+    const newMinutes = Math.max(1, Math.min(120, focusMinutes + increment));
+    setFocusMinutes(newMinutes);
+    setSeconds(newMinutes * 60);
   };
 
   const handleSaveSession = async () => {
@@ -112,7 +121,10 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: '#1a3a2e' }]}>
       <StatusBar style="light" />
-      
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.header}>
         <Text style={styles.title}>🎯 Odaklanma Seansı</Text>
         {isActive && (
@@ -129,7 +141,46 @@ export default function HomeScreen({ navigation }) {
         disabled={isActive}
       />
 
-      <TimerDisplay seconds={seconds} mode="focus" />
+      <View style={styles.timeAdjuster}>
+        <TouchableOpacity
+          style={[styles.adjustButton, isActive && styles.disabledButton]}
+          onPress={() => adjustTime(-5)}
+          disabled={isActive}
+        >
+          <Text style={styles.adjustButtonText}>-5</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={[styles.adjustButton, isActive && styles.disabledButton]}
+          onPress={() => adjustTime(-1)}
+          disabled={isActive}
+        >
+          <Text style={styles.adjustButtonText}>-1</Text>
+        </TouchableOpacity>
+        
+        <View style={styles.minutesDisplay}>
+          <Text style={styles.minutesText}>{focusMinutes}</Text>
+          <Text style={styles.minutesLabel}>dakika</Text>
+        </View>
+        
+        <TouchableOpacity
+          style={[styles.adjustButton, isActive && styles.disabledButton]}
+          onPress={() => adjustTime(1)}
+          disabled={isActive}
+        >
+          <Text style={styles.adjustButtonText}>+1</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={[styles.adjustButton, isActive && styles.disabledButton]}
+          onPress={() => adjustTime(5)}
+          disabled={isActive}
+        >
+          <Text style={styles.adjustButtonText}>+5</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TimerDisplay seconds={seconds} totalSeconds={focusMinutes * 60} mode="focus" />
 
       {distractions > 0 && (
         <View style={styles.distractionBadge}>
@@ -164,6 +215,7 @@ export default function HomeScreen({ navigation }) {
             : '💡 Başlamak için kategori seçin ve başlat butonuna basın.'}
         </Text>
       </View>
+      </ScrollView>
 
       <SessionSummary
         visible={showSummary}
@@ -179,8 +231,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000000',
+  },
+  scrollContent: {
     paddingTop: 60,
-    paddingBottom: 100,
+    paddingBottom: 120,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
   title: {
     fontSize: 28,
@@ -269,5 +330,48 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,
+  },
+  timeAdjuster: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+    gap: 10,
+  },
+  adjustButton: {
+    backgroundColor: 'rgba(78, 205, 196, 0.3)',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#4ECDC4',
+    minWidth: 50,
+    alignItems: 'center',
+  },
+  disabledButton: {
+    opacity: 0.3,
+  },
+  adjustButtonText: {
+    color: '#4ECDC4',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  minutesDisplay: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 15,
+    minWidth: 80,
+  },
+  minutesText: {
+    color: '#fff',
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
+  minutesLabel: {
+    color: '#4ECDC4',
+    fontSize: 12,
+    marginTop: 2,
   },
 });
