@@ -211,8 +211,8 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.infoBox}>
         <Text style={styles.infoText}>
           {isActive 
-            ? '💡 Odaklanın! Uygulamadan çıkmayın.' 
-            : '💡 Başlamak için kategori seçin ve başlat butonuna basın.'}
+            ? '🔥 Harika gidiyorsun! Odağını koru ve hedefine ulaş.' 
+            : '✨ Süreyi ayarla, kategoriyi seç ve başarıya doğru ilk adımını at!'}
         </Text>
       </View>
       </ScrollView>
