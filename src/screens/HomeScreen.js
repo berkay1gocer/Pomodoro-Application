@@ -9,6 +9,7 @@ import { getCategoryLabel } from '../utils/categories';
 
 const DEFAULT_FOCUS_TIME = 25; // 25 dakika
 
+// HomeScreen component
 export default function HomeScreen({ navigation }) {
   const [focusMinutes, setFocusMinutes] = useState(DEFAULT_FOCUS_TIME);
   const [seconds, setSeconds] = useState(DEFAULT_FOCUS_TIME * 60);
