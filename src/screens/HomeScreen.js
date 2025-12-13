@@ -212,8 +212,10 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.infoBox}>
         <Text style={styles.infoText}>
           {isActive 
-            ? '🔥 Harika gidiyorsun! Odağını koru ve hedefine ulaş.' 
-            : '✨ Süreyi ayarla, kategoriyi seç ve başarıya doğru ilk adımını at!'}
+            ? seconds > focusMinutes * 30 
+              ? '🔥 Harika başlangıç! Odaklanmaya devam et.' 
+              : '💪 Yarı yolu geçtin! Sonuna kadar odaklan!'
+            : '✨ Hazır mısın? Kategoriyi seç, süreyi ayarla ve başla!'}
         </Text>
       </View>
       </ScrollView>
