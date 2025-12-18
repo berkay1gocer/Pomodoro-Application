@@ -127,7 +127,7 @@ export default function HomeScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
       <View style={styles.header}>
-        <Text style={styles.title}>🎯 Odaklanma Seansı</Text>
+        <Text style={styles.title}>Odaklanma Seansı</Text>
         {isActive && (
           <View style={styles.liveIndicator}>
             <View style={styles.liveDot} />
@@ -199,6 +199,27 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.mainButtonText}>
             {isActive ? '⏸ DURAKLAT' : '▶ BAŞLAT'}
           </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.stopButton}
+          onPress={() => {
+            setIsActive(false);
+            const duration = (focusMinutes * 60) - seconds;
+            const session = {
+              category: selectedCategory,
+              categoryLabel: getCategoryLabel(selectedCategory),
+              duration: duration,
+              distractions: distractions,
+              date: sessionStartTime || new Date().toISOString(),
+              completedAt: new Date().toISOString(),
+            };
+            setCurrentSession(session);
+            setShowSummary(true);
+          }}
+          disabled={!isActive && seconds === focusMinutes * 60}
+        >
+          <Text style={styles.stopButtonText}>⏹ BİTİR</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
@@ -311,6 +332,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
     letterSpacing: 1,
+  },
+  stopButton: {
+    backgroundColor: '#e74c3c',
+    paddingVertical: 14,
+    paddingHorizontal: 45,
+    borderRadius: 25,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    minWidth: 180,
+    alignItems: 'center',
+  },
+  stopButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    letterSpacing: 0.5,
   },
   resetButton: {
     paddingVertical: 12,

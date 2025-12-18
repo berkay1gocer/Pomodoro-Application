@@ -44,7 +44,7 @@ export default function ReportsScreen() {
 
   const handleClearData = () => {
     Alert.alert(
-      '⚠️ Tüm Verileri Sil',
+      'Tüm Verileri Sil',
       'Tüm kayıtlı seanslar silinecek. Emin misiniz?',
       [
         { text: 'İptal', style: 'cancel' },
@@ -54,7 +54,7 @@ export default function ReportsScreen() {
           onPress: async () => {
             const success = await clearAllSessions();
             if (success) {
-              Alert.alert('✅ Başarılı', 'Tüm veriler silindi.');
+              Alert.alert('Başarılı', 'Tüm veriler silindi.');
               loadData();
             }
           },
@@ -124,13 +124,13 @@ export default function ReportsScreen() {
       }
     >
       <View style={styles.header}>
-        <Text style={styles.title}>📊 İstatistiklerim</Text>
+        <Text style={styles.title}>İstatistiklerim</Text>
         <View style={styles.headerButtons}>
           <TouchableOpacity style={styles.testButton} onPress={addTestData}>
-            <Text style={styles.testButtonText}>📝 Test</Text>
+            <Text style={styles.testButtonText}>Test</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.clearButton} onPress={handleClearData}>
-            <Text style={styles.clearButtonText}>🗑️</Text>
+            <Text style={styles.clearButtonText}>Sil</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -161,7 +161,7 @@ export default function ReportsScreen() {
       {/* Son 7 Gün Bar Chart */}
       {stats.last7Days.length > 0 && (
         <View style={styles.chartContainer}>
-          <Text style={styles.chartTitle}>📈 Son 7 Günün Odaklanma Süreleri</Text>
+          <Text style={styles.chartTitle}>Son 7 Günün Odaklanma Süreleri</Text>
           <BarChart
             data={{
               labels: stats.last7Days.map(d => d.date),
@@ -195,7 +195,7 @@ export default function ReportsScreen() {
       {/* Kategori Dağılımı Pie Chart */}
       {pieData.length > 0 && (
         <View style={styles.chartContainer}>
-          <Text style={styles.chartTitle}>🎯 Kategorilere Göre Dağılım</Text>
+          <Text style={styles.chartTitle}>Kategorilere Göre Dağılım</Text>
           <PieChart
             data={pieData}
             width={screenWidth - 40}
